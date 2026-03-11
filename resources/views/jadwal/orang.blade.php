@@ -29,7 +29,7 @@ color:#333;
 }
 
 .nama{
-font-size:40px;
+font-size:42px;
 font-weight:bold;
 font-style:italic;
 }
@@ -38,122 +38,114 @@ font-style:italic;
 background:#2f2f2f;
 color:white;
 padding:18px 40px;
-font-size:26px;
-border-radius:8px;
+font-size:24px;
+border-radius:12px;
+box-shadow:0 6px 15px rgba(0,0,0,0.2);
 }
-
-/* DATE PICKER */
 
 .form-tanggal{
 margin-top:20px;
-margin-bottom:20px;
+margin-bottom:25px;
 }
 
 input[type=date]{
 padding:8px;
-font-size:14px;
 border-radius:6px;
 border:1px solid #ccc;
 }
 
-button{
-padding:8px 14px;
-background:#2f2f2f;
-color:white;
-border:none;
-border-radius:6px;
-cursor:pointer;
+.schedule-box{
+background:white;
+padding:25px;
+border-radius:16px;
+box-shadow:0 10px 30px rgba(0,0,0,0.15);
 }
-
-/* TABLE STYLE */
 
 table{
 width:100%;
 border-collapse:separate;
-border-spacing:0;
-background:white;
-border-radius:10px;
-overflow:hidden;
-box-shadow:0 4px 15px rgba(0,0,0,0.15);
+border-spacing:0 15px;
 }
 
 th{
 background:#2f2f2f;
 color:white;
 padding:14px;
-font-size:14px;
-letter-spacing:1px;
+}
+
+tr{
+background:white;
+box-shadow:0 4px 10px rgba(0,0,0,0.12);
 }
 
 td{
-border-bottom:1px solid #eee;
-height:60px;
+padding:12px;
 text-align:center;
 }
 
-tr:nth-child(even){
-background:#fafafa;
-}
-
-tr:hover{
-background:#f2f2f2;
-transition:0.2s;
-}
-
-/* INPUT */
-
 input[type=text]{
-width:85%;
+width:90%;
 padding:8px;
-border:1px solid #ddd;
 border-radius:6px;
-font-size:14px;
-outline:none;
+border:1px solid #ddd;
 }
-
-input[type=text]:focus{
-border-color:#2f2f2f;
-}
-
-/* CHECKBOX */
 
 input[type=checkbox]{
 width:18px;
 height:18px;
-cursor:pointer;
 }
 
-/* STATUS ICON */
-
-.check{
-background:#2f2f2f;
-color:white;
-border-radius:50%;
-padding:6px 8px;
-}
-
-.cross{
-background:#ff4b4b;
-color:white;
-border-radius:50%;
-padding:6px 8px;
-}
-
-/* SAVE BUTTON */
-
-.save-btn{
-margin-top:25px;
-padding:12px 26px;
-font-size:14px;
-border-radius:8px;
+.btn{
+padding:10px 18px;
 background:#2f2f2f;
 color:white;
 border:none;
+border-radius:8px;
+cursor:pointer;
+margin-top:10px;
+}
+
+.btn:hover{
+background:#444;
+}
+
+.add-btn{
+margin-bottom:15px;
+}
+.status-box{
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+.checkmark{
+width:22px;
+height:22px;
+border-radius:50%;
+background:#ddd;
+display:inline-block;
+}
+
+.status-box input{
+display:none;
+}
+
+.status-box input:checked + .checkmark{
+background:#2ecc71;
+box-shadow:0 0 6px rgba(46,204,113,0.8);
+}
+
+.hapus-btn{
+background:#ff4b4b;
+border:none;
+color:white;
+padding:6px 12px;
+border-radius:6px;
 cursor:pointer;
 }
 
-.save-btn:hover{
-background:#444;
+.hapus-btn:hover{
+background:#d93636;
 }
 
 </style>
@@ -184,6 +176,7 @@ JADWAL PIKET HARIAN
 
 </div>
 
+
 <div class="form-tanggal">
 
 <form method="GET">
@@ -192,7 +185,7 @@ JADWAL PIKET HARIAN
 
 <input type="date" name="tanggal" value="{{ $tanggal }}">
 
-<button type="submit">Lihat</button>
+<button class="btn" type="submit">Lihat</button>
 
 </form>
 
@@ -206,24 +199,75 @@ JADWAL PIKET HARIAN
 <input type="hidden" name="nama" value="{{ strtolower($nama) }}">
 <input type="hidden" name="tanggal" value="{{ $tanggal }}">
 
-<table>
+<div class="schedule-box">
+
+<button type="button" class="btn add-btn" onclick="tambahRow()">
++ Tambah Slot Jadwal
+</button>
+
+<table id="jadwalTable">
 
 <tr>
-<th width="70">NO</th>
-<th width="150">JAM</th>
+<th>NO</th>
+<th>JAM</th>
 <th>TUGAS</th>
 <th>TEMPAT</th>
-<th width="120">
-<span class="cross">✖</span>
-<span class="check">✔</span>
-</th>
+<th>STATUS</th>
+<th>AKSI</th>
 </tr>
 
-@for($i=1;$i<=5;$i++)
+@foreach($jadwal as $i => $j)
 
 <tr>
 
-<td><b>{{ $i }}</b></td>
+<form method="POST" action="/edit-jadwal/{{ $j->id }}">
+@csrf
+
+<td>{{ $i+1 }}</td>
+
+<td>
+<input type="text" name="jam" value="{{ $j->jam }}">
+</td>
+
+<td>
+<input type="text" name="tugas" value="{{ $j->tugas }}">
+</td>
+
+<td>
+<input type="text" name="tempat" value="{{ $j->tempat }}">
+</td>
+
+<td>
+<label class="status-box">
+<input type="checkbox" name="status" {{ $j->status ? 'checked' : '' }}>
+<span class="checkmark"></span>
+</label>
+</td>
+
+<td>
+
+<button class="btn" type="submit">
+Edit
+</button>
+
+</form>
+
+<form method="POST" action="/hapus-jadwal/{{ $j->id }}" style="display:inline;">
+@csrf
+<button class="hapus-btn">
+Hapus
+</button>
+</form>
+
+</td>
+
+</tr>
+
+@endforeach
+
+<tr>
+
+<td class="no">+</td>
 
 <td>
 <input type="text" name="jam[]" placeholder="07:00">
@@ -238,16 +282,25 @@ JADWAL PIKET HARIAN
 </td>
 
 <td>
-<input type="checkbox" name="status[{{ $i }}]">
+<label class="status-box">
+<input type="checkbox" name="status[]">
+<span class="checkmark"></span>
+</label>
+</td>
+
+<td>
+<button type="button" class="hapus-btn" onclick="hapusRow(this)">
+Hapus
+</button>
 </td>
 
 </tr>
 
-@endfor
-
 </table>
 
-<button class="save-btn" type="submit">
+</div>
+
+<button class="btn" type="submit">
 SIMPAN JADWAL
 </button>
 
@@ -255,5 +308,83 @@ SIMPAN JADWAL
 
 </div>
 
+<script>
+
+function tambahRow(){
+
+var table=document.getElementById("jadwalTable");
+
+var rowCount=table.rows.length;
+
+var row=table.insertRow(rowCount);
+
+row.innerHTML=`
+<td class="no">${rowCount}</td>
+
+<td>
+<input type="text" name="jam[]" placeholder="07:00">
+</td>
+
+<td>
+<input type="text" name="tugas[]" placeholder="Isi tugas">
+</td>
+
+<td>
+<input type="text" name="tempat[]" placeholder="Lokasi">
+</td>
+
+<td>
+<label class="status-box">
+<input type="checkbox" name="status[]" onchange="toggleStatus(this)">
+<span class="checkmark"></span>
+</label>
+</td>
+
+<td>
+<button type="button" class="hapus-btn" onclick="hapusRow(this)">
+Hapus
+</button>
+</td>
+`;
+
+}
+
+function hapusRow(btn){
+
+var row=btn.parentNode.parentNode;
+
+row.remove();
+
+updateNomor();
+
+}
+
+function updateNomor(){
+
+var table=document.getElementById("jadwalTable");
+
+for(var i=1;i<table.rows.length;i++){
+
+table.rows[i].cells[0].innerText=i;
+
+}
+
+}
+
+function toggleStatus(cb){
+
+if(cb.checked){
+
+cb.parentElement.style.transform="scale(1.1)";
+
+}else{
+
+cb.parentElement.style.transform="scale(1)";
+
+}
+
+}
+
+</script>
 </body>
 </html>
