@@ -44,7 +44,7 @@ Route::post('/simpan-jadwal', function (Request $request) {
     $tugas = $request->tugas;
     $tempat = $request->tempat;
 
-    if($jam){
+    if ($jam) {
 
         for ($i = 0; $i < count($jam); $i++) {
 
@@ -60,6 +60,12 @@ Route::post('/simpan-jadwal', function (Request $request) {
         }
 
     }
+
+    return back();
+
+});
+
+
 Route::post('/hapus-jadwal/{id}', function ($id) {
 
     DB::table('jadwal')->where('id', $id)->delete();
@@ -67,6 +73,7 @@ Route::post('/hapus-jadwal/{id}', function ($id) {
     return back();
 
 });
+
 
 Route::post('/edit-jadwal/{id}', function (Request $request, $id) {
 
@@ -82,6 +89,79 @@ Route::post('/edit-jadwal/{id}', function (Request $request, $id) {
     return back();
 
 });
+
+Route::post('/upload-foto', function (Illuminate\Http\Request $request) {
+
+    $nama = strtolower($request->nama);
+
+    if ($request->hasFile('foto')) {
+
+        $file = $request->file('foto');
+
+        // nama file = nama orang.jpg
+        $filename = $nama . '.jpg';
+
+        // simpan ke folder public/foto
+        $file->move(public_path('foto'), $filename);
+
+    }
+
+    return back();
+});
+
+Route::post('/upload-foto', function (Illuminate\Http\Request $request) {
+
+    $nama = strtolower($request->nama);
+
+    if ($request->hasFile('foto')) {
+
+        $file = $request->file('foto');
+        $filename = $nama.'.jpg';
+
+        $file->move(public_path('foto'), $filename);
+    }
+
+    return back();
+});
+Route::post('/hapus-foto', function (Illuminate\Http\Request $request) {
+
+    $nama = strtolower($request->nama);
+
+    $path = public_path('foto/'.$nama.'.jpg');
+
+    if(file_exists($path)){
+        unlink($path);
+    }
+
+    return back();
+});
+Route::post('/upload-foto', function (Illuminate\Http\Request $request) {
+
+    $nama = strtolower($request->nama);
+
+    if ($request->hasFile('foto')) {
+
+        $file = $request->file('foto');
+
+        $filename = $nama . '.jpg';
+
+        $file->move(public_path('foto'), $filename);
+    }
+
+    return back();
+
+});
+
+
+Route::post('/hapus-foto', function (Illuminate\Http\Request $request) {
+
+    $nama = strtolower($request->nama);
+
+    $path = public_path('foto/' . $nama . '.jpg');
+
+    if (file_exists($path)) {
+        unlink($path);
+    }
 
     return back();
 
