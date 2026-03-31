@@ -112,6 +112,7 @@ background:#444;
 .add-btn{
 margin-bottom:15px;
 }
+
 .status-box{
 display:flex;
 justify-content:center;
@@ -176,24 +177,17 @@ JADWAL PIKET HARIAN
 
 </div>
 
-
 <div class="form-tanggal">
 
 <form method="GET">
-
 <label>Pilih Tanggal :</label>
-
 <input type="date" name="tanggal" value="{{ $tanggal }}">
-
 <button class="btn" type="submit">Lihat</button>
-
 </form>
 
 </div>
 
-
 <form method="POST" action="/simpan-jadwal">
-
 @csrf
 
 <input type="hidden" name="nama" value="{{ strtolower($nama) }}">
@@ -220,45 +214,24 @@ JADWAL PIKET HARIAN
 
 <tr>
 
-<form method="POST" action="/edit-jadwal/{{ $j->id }}">
-@csrf
-
 <td>{{ $i+1 }}</td>
 
-<td>
-<input type="text" name="jam" value="{{ $j->jam }}">
-</td>
-
-<td>
-<input type="text" name="tugas" value="{{ $j->tugas }}">
-</td>
-
-<td>
-<input type="text" name="tempat" value="{{ $j->tempat }}">
-</td>
+<td><input type="text" name="jam[]" value="{{ $j->jam }}"></td>
+<td><input type="text" name="tugas[]" value="{{ $j->tugas }}"></td>
+<td><input type="text" name="tempat[]" value="{{ $j->tempat }}"></td>
 
 <td>
 <label class="status-box">
-<input type="checkbox" name="status" {{ $j->status ? 'checked' : '' }}>
+<input type="checkbox" name="status[]" {{ $j->status ? 'checked' : '' }}>
 <span class="checkmark"></span>
 </label>
 </td>
 
 <td>
-
-<button class="btn" type="submit">
-Edit
-</button>
-
-</form>
-
 <form method="POST" action="/hapus-jadwal/{{ $j->id }}" style="display:inline;">
 @csrf
-<button class="hapus-btn">
-Hapus
-</button>
+<button class="hapus-btn">Hapus</button>
 </form>
-
 </td>
 
 </tr>
@@ -269,17 +242,9 @@ Hapus
 
 <td class="no">+</td>
 
-<td>
-<input type="text" name="jam[]" placeholder="07:00">
-</td>
-
-<td>
-<input type="text" name="tugas[]" placeholder="Isi tugas">
-</td>
-
-<td>
-<input type="text" name="tempat[]" placeholder="Lokasi">
-</td>
+<td><input type="text" name="jam[]" placeholder="07:00"></td>
+<td><input type="text" name="tugas[]" placeholder="Isi tugas"></td>
+<td><input type="text" name="tempat[]" placeholder="Lokasi"></td>
 
 <td>
 <label class="status-box">
@@ -289,9 +254,7 @@ Hapus
 </td>
 
 <td>
-<button type="button" class="hapus-btn" onclick="hapusRow(this)">
-Hapus
-</button>
+<button type="button" class="hapus-btn" onclick="hapusRow(this)">Hapus</button>
 </td>
 
 </tr>
@@ -300,9 +263,12 @@ Hapus
 
 </div>
 
+<div style="display:flex; justify-content:flex-end; gap:10px; margin-top:15px;">
+<a href="/" class="btn">Home</a>
 <button class="btn" type="submit">
 SIMPAN JADWAL
 </button>
+</div>
 
 </form>
 
@@ -311,78 +277,41 @@ SIMPAN JADWAL
 <script>
 
 function tambahRow(){
-
 var table=document.getElementById("jadwalTable");
-
 var rowCount=table.rows.length;
 
 var row=table.insertRow(rowCount);
 
 row.innerHTML=`
 <td class="no">${rowCount}</td>
-
-<td>
-<input type="text" name="jam[]" placeholder="07:00">
-</td>
-
-<td>
-<input type="text" name="tugas[]" placeholder="Isi tugas">
-</td>
-
-<td>
-<input type="text" name="tempat[]" placeholder="Lokasi">
-</td>
+<td><input type="text" name="jam[]" placeholder="07:00"></td>
+<td><input type="text" name="tugas[]" placeholder="Isi tugas"></td>
+<td><input type="text" name="tempat[]" placeholder="Lokasi"></td>
 
 <td>
 <label class="status-box">
-<input type="checkbox" name="status[]" onchange="toggleStatus(this)">
+<input type="checkbox" name="status[]">
 <span class="checkmark"></span>
 </label>
 </td>
 
 <td>
-<button type="button" class="hapus-btn" onclick="hapusRow(this)">
-Hapus
-</button>
+<button type="button" class="hapus-btn" onclick="hapusRow(this)">Hapus</button>
 </td>
 `;
-
 }
 
 function hapusRow(btn){
-
 var row=btn.parentNode.parentNode;
-
 row.remove();
-
 updateNomor();
-
 }
 
 function updateNomor(){
-
 var table=document.getElementById("jadwalTable");
-
 for(var i=1;i<table.rows.length;i++){
-
 table.rows[i].cells[0].innerText=i;
-
 }
-
-}
-
-function toggleStatus(cb){
-
-if(cb.checked){
-
-cb.parentElement.style.transform="scale(1.1)";
-
-}else{
-
-cb.parentElement.style.transform="scale(1)";
-
-}
-
 }
 
 </script>

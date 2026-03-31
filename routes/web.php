@@ -8,15 +8,15 @@ $orang = [
     'Farera',
     'Reza',
     'Junaidi',
-    'Putri'
+    'Putri',
+    'Yudi',
+    'Arul'
 ];
 
 Route::get('/', function () use ($orang) {
-
     return view('home', [
         'orang' => $orang
     ]);
-
 });
 
 Route::get('/orang/{nama}', function ($nama) use ($orang) {
@@ -34,135 +34,54 @@ Route::get('/orang/{nama}', function ($nama) use ($orang) {
         'orang' => $orang,
         'jadwal' => $jadwal
     ]);
-
 });
 
+/* ===========================
+   SIMPAN JADWAL (FIX)
+=========================== */
 
 Route::post('/simpan-jadwal', function (Request $request) {
 
-    $jam = $request->jam;
-    $tugas = $request->tugas;
-    $tempat = $request->tempat;
+    DB::table('jadwal')
+        ->where('nama', $request->nama)
+        ->where('tanggal', $request->tanggal)
+        ->delete();
 
-    if ($jam) {
+    if ($request->jam) {
+        for ($i = 0; $i < count($request->jam); $i++) {
 
-        for ($i = 0; $i < count($jam); $i++) {
+            $jam = $request->jam[$i] ?? null;
+            $tugas = $request->tugas[$i] ?? null;
+            $tempat = $request->tempat[$i] ?? null;
+
+            // ⛔ SKIP kalau kosong / setengah kosong
+            if (!$jam || !$tugas || !$tempat) {
+                continue;
+            }
 
             DB::table('jadwal')->insert([
                 'nama' => $request->nama,
                 'tanggal' => $request->tanggal,
-                'jam' => $jam[$i],
-                'tugas' => $tugas[$i],
-                'tempat' => $tempat[$i],
-                'status' => 0
+                'jam' => $jam,
+                'tugas' => $tugas,
+                'tempat' => $tempat,
+                'status' => isset($request->status[$i]) ? 1 : 0
             ]);
-
         }
-
     }
 
     return back();
-
 });
 
+/* ===========================
+   HAPUS JADWAL
+=========================== */
 
 Route::post('/hapus-jadwal/{id}', function ($id) {
 
-    DB::table('jadwal')->where('id', $id)->delete();
-
-    return back();
-
-});
-
-
-Route::post('/edit-jadwal/{id}', function (Request $request, $id) {
-
     DB::table('jadwal')
         ->where('id', $id)
-        ->update([
-            'jam' => $request->jam,
-            'tugas' => $request->tugas,
-            'tempat' => $request->tempat,
-            'status' => $request->status ? 1 : 0
-        ]);
+        ->delete();
 
     return back();
-
-});
-
-Route::post('/upload-foto', function (Illuminate\Http\Request $request) {
-
-    $nama = strtolower($request->nama);
-
-    if ($request->hasFile('foto')) {
-
-        $file = $request->file('foto');
-
-        // nama file = nama orang.jpg
-        $filename = $nama . '.jpg';
-
-        // simpan ke folder public/foto
-        $file->move(public_path('foto'), $filename);
-
-    }
-
-    return back();
-});
-
-Route::post('/upload-foto', function (Illuminate\Http\Request $request) {
-
-    $nama = strtolower($request->nama);
-
-    if ($request->hasFile('foto')) {
-
-        $file = $request->file('foto');
-        $filename = $nama.'.jpg';
-
-        $file->move(public_path('foto'), $filename);
-    }
-
-    return back();
-});
-Route::post('/hapus-foto', function (Illuminate\Http\Request $request) {
-
-    $nama = strtolower($request->nama);
-
-    $path = public_path('foto/'.$nama.'.jpg');
-
-    if(file_exists($path)){
-        unlink($path);
-    }
-
-    return back();
-});
-Route::post('/upload-foto', function (Illuminate\Http\Request $request) {
-
-    $nama = strtolower($request->nama);
-
-    if ($request->hasFile('foto')) {
-
-        $file = $request->file('foto');
-
-        $filename = $nama . '.jpg';
-
-        $file->move(public_path('foto'), $filename);
-    }
-
-    return back();
-
-});
-
-
-Route::post('/hapus-foto', function (Illuminate\Http\Request $request) {
-
-    $nama = strtolower($request->nama);
-
-    $path = public_path('foto/' . $nama . '.jpg');
-
-    if (file_exists($path)) {
-        unlink($path);
-    }
-
-    return back();
-
 });
