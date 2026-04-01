@@ -4,6 +4,10 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+/* ===========================
+   DATA ORANG
+=========================== */
+
 $orang = [
     'Farera',
     'Reza',
@@ -13,11 +17,19 @@ $orang = [
     'Arul'
 ];
 
+/* ===========================
+   HALAMAN HOME
+=========================== */
+
 Route::get('/', function () use ($orang) {
     return view('home', [
         'orang' => $orang
     ]);
 });
+
+/* ===========================
+   HALAMAN JADWAL PER ORANG
+=========================== */
 
 Route::get('/orang/{nama}', function ($nama) use ($orang) {
 
@@ -37,7 +49,7 @@ Route::get('/orang/{nama}', function ($nama) use ($orang) {
 });
 
 /* ===========================
-   SIMPAN JADWAL (FIX)
+   SIMPAN JADWAL
 =========================== */
 
 Route::post('/simpan-jadwal', function (Request $request) {
@@ -54,7 +66,7 @@ Route::post('/simpan-jadwal', function (Request $request) {
             $tugas = $request->tugas[$i] ?? null;
             $tempat = $request->tempat[$i] ?? null;
 
-            // ⛔ SKIP kalau kosong / setengah kosong
+            // skip kalau kosong
             if (!$jam || !$tugas || !$tempat) {
                 continue;
             }
@@ -77,11 +89,47 @@ Route::post('/simpan-jadwal', function (Request $request) {
    HAPUS JADWAL
 =========================== */
 
-Route::post('/hapus-jadwal/{id}', function ($id) {
+Route::get('/hapus-jadwal/{id}', function ($id) {
 
     DB::table('jadwal')
         ->where('id', $id)
         ->delete();
+
+    return back();
+});
+
+/* ===========================
+   UPLOAD FOTO PROFIL
+=========================== */
+
+Route::post('/upload-foto', function (Request $request) {
+
+    if ($request->hasFile('foto')) {
+
+        $file = $request->file('foto');
+        $namaFile = time() . '.' . $file->getClientOriginalExtension();
+
+        // simpan ke public/foto
+        $file->move(public_path('foto'), $namaFile);
+
+        // kirim nama file ke session
+        return back()->with('foto', $namaFile);
+    }
+
+    return back();
+});
+
+/* ===========================
+   HAPUS FOTO PROFIL
+=========================== */
+
+Route::get('/hapus-foto/{nama}', function ($nama) {
+
+    $path = public_path('foto/' . $nama);
+
+    if (file_exists($path)) {
+        unlink($path);
+    }
 
     return back();
 });

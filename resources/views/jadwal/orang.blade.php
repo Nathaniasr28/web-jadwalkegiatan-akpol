@@ -1,319 +1,336 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <title>Jadwal Piket</title>
 
-<title>Jadwal Piket</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Segoe UI, Arial;
+            background: #e6e6e6;
+        }
 
-<style>
+        .container {
+            width: 1000px;
+            margin: 40px auto;
+        }
 
-body{
-margin:0;
-font-family:Segoe UI, Arial;
-background:#e6e6e6;
-}
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-.container{
-width:1000px;
-margin:40px auto;
-}
+        .date {
+            font-size: 14px;
+            color: #333;
+        }
 
-.header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-}
+        .nama {
+            font-size: 42px;
+            font-weight: bold;
+            font-style: italic;
+        }
 
-.date{
-font-size:14px;
-color:#333;
-}
+        .title {
+            background: #2f2f2f;
+            color: white;
+            padding: 18px 40px;
+            font-size: 24px;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+        }
 
-.nama{
-font-size:42px;
-font-weight:bold;
-font-style:italic;
-}
+        .form-tanggal {
+            margin-top: 20px;
+            margin-bottom: 25px;
+        }
 
-.title{
-background:#2f2f2f;
-color:white;
-padding:18px 40px;
-font-size:24px;
-border-radius:12px;
-box-shadow:0 6px 15px rgba(0,0,0,0.2);
-}
+        input[type="date"] {
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
 
-.form-tanggal{
-margin-top:20px;
-margin-bottom:25px;
-}
+        .schedule-box {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
 
-input[type=date]{
-padding:8px;
-border-radius:6px;
-border:1px solid #ccc;
-}
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 15px;
+        }
 
-.schedule-box{
-background:white;
-padding:25px;
-border-radius:16px;
-box-shadow:0 10px 30px rgba(0,0,0,0.15);
-}
+        th {
+            background: #2f2f2f;
+            color: white;
+            padding: 14px;
+        }
 
-table{
-width:100%;
-border-collapse:separate;
-border-spacing:0 15px;
-}
+        tr {
+            background: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+        }
 
-th{
-background:#2f2f2f;
-color:white;
-padding:14px;
-}
+        td {
+            padding: 12px;
+            text-align: center;
+        }
 
-tr{
-background:white;
-box-shadow:0 4px 10px rgba(0,0,0,0.12);
-}
+        input[type="text"] {
+            width: 90%;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+        }
 
-td{
-padding:12px;
-text-align:center;
-}
+        .btn {
+            padding: 10px 18px;
+            background: #2f2f2f;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
 
-input[type=text]{
-width:90%;
-padding:8px;
-border-radius:6px;
-border:1px solid #ddd;
-}
+        .btn:hover {
+            background: #444;
+        }
 
-input[type=checkbox]{
-width:18px;
-height:18px;
-}
+        .add-btn {
+            margin-bottom: 15px;
+        }
 
-.btn{
-padding:10px 18px;
-background:#2f2f2f;
-color:white;
-border:none;
-border-radius:8px;
-cursor:pointer;
-margin-top:10px;
-}
+        .status-box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-.btn:hover{
-background:#444;
-}
+        .checkmark {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #ddd;
+            display: inline-block;
+        }
 
-.add-btn{
-margin-bottom:15px;
-}
+        .status-box input {
+            display: none;
+        }
 
-.status-box{
-display:flex;
-justify-content:center;
-align-items:center;
-}
+        .status-box input:checked + .checkmark {
+            background: #2ecc71;
+            box-shadow: 0 0 6px rgba(46,204,113,0.8);
+        }
 
-.checkmark{
-width:22px;
-height:22px;
-border-radius:50%;
-background:#ddd;
-display:inline-block;
-}
+        .hapus-btn {
+            background: #ff4b4b;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+        }
 
-.status-box input{
-display:none;
-}
-
-.status-box input:checked + .checkmark{
-background:#2ecc71;
-box-shadow:0 0 6px rgba(46,204,113,0.8);
-}
-
-.hapus-btn{
-background:#ff4b4b;
-border:none;
-color:white;
-padding:6px 12px;
-border-radius:6px;
-cursor:pointer;
-}
-
-.hapus-btn:hover{
-background:#d93636;
-}
-
-</style>
-
+        .hapus-btn:hover {
+            background: #d93636;
+        }
+    </style>
 </head>
 
 <body>
 
 <div class="container">
 
-<div class="header">
+    <div class="header">
 
-<div>
+        <div>
+            <div class="date">
+                DATE: {{ date('d/m/Y', strtotime($tanggal)) }}
+            </div>
 
-<div class="date">
-DATE: {{ date('d/m/Y', strtotime($tanggal)) }}
-</div>
+            <div class="nama">
+                {{ $nama }}
+            </div>
 
-<div class="nama">
-{{ $nama }}
-</div>
+            <!-- FOTO PROFIL -->
+            <form 
+                id="formFoto" 
+                action="/upload-foto" 
+                method="POST" 
+                enctype="multipart/form-data"
+            >
+                @csrf
 
-</div>
+                <label for="fotoInput" style="cursor:pointer;">
+                    <img
+                        src="{{ session('foto') ? asset('foto/'.session('foto')) : 'https://via.placeholder.com/120' }}"
+                        style="width:120px;height:120px;border-radius:50%;object-fit:cover;margin-top:10px;"
+                    >
+                </label>
 
-<div class="title">
-JADWAL PIKET HARIAN
-</div>
+                <input
+                    type="file"
+                    id="fotoInput"
+                    name="foto"
+                    style="display:none"
+                >
+            </form>
+        </div>
 
-</div>
+        <div class="title">
+            JADWAL PIKET HARIAN
+        </div>
 
-<div class="form-tanggal">
+    </div>
 
-<form method="GET">
-<label>Pilih Tanggal :</label>
-<input type="date" name="tanggal" value="{{ $tanggal }}">
-<button class="btn" type="submit">Lihat</button>
-</form>
+    <div class="form-tanggal">
+        <form method="GET">
+            <label>Pilih Tanggal :</label>
 
-</div>
+            <input 
+                type="date" 
+                name="tanggal" 
+                value="{{ $tanggal }}"
+            >
 
-<form method="POST" action="/simpan-jadwal">
-@csrf
+            <button class="btn">Lihat</button>
+        </form>
+    </div>
 
-<input type="hidden" name="nama" value="{{ strtolower($nama) }}">
-<input type="hidden" name="tanggal" value="{{ $tanggal }}">
+    <form method="POST" action="/simpan-jadwal">
+        @csrf
 
-<div class="schedule-box">
+        <input type="hidden" name="nama" value="{{ strtolower($nama) }}">
+        <input type="hidden" name="tanggal" value="{{ $tanggal }}">
 
-<button type="button" class="btn add-btn" onclick="tambahRow()">
-+ Tambah Slot Jadwal
-</button>
+        <div class="schedule-box">
 
-<table id="jadwalTable">
+            <button 
+                type="button" 
+                class="btn add-btn" 
+                onclick="tambahRow()"
+            >
+                + Tambah Slot Jadwal
+            </button>
 
-<tr>
-<th>NO</th>
-<th>JAM</th>
-<th>TUGAS</th>
-<th>TEMPAT</th>
-<th>STATUS</th>
-<th>AKSI</th>
-</tr>
+            <table id="jadwalTable">
 
-@foreach($jadwal as $i => $j)
+                <tr>
+                    <th>NO</th>
+                    <th>JAM</th>
+                    <th>TUGAS</th>
+                    <th>TEMPAT</th>
+                    <th>STATUS</th>
+                    <th>AKSI</th>
+                </tr>
 
-<tr>
+                @foreach($jadwal as $i => $j)
+                <tr>
+                    <td>{{ $i + 1 }}</td>
 
-<td>{{ $i+1 }}</td>
+                    <td>
+                        <input type="text" name="jam[]" value="{{ $j->jam }}">
+                    </td>
 
-<td><input type="text" name="jam[]" value="{{ $j->jam }}"></td>
-<td><input type="text" name="tugas[]" value="{{ $j->tugas }}"></td>
-<td><input type="text" name="tempat[]" value="{{ $j->tempat }}"></td>
+                    <td>
+                        <input type="text" name="tugas[]" value="{{ $j->tugas }}">
+                    </td>
 
-<td>
-<label class="status-box">
-<input type="checkbox" name="status[]" {{ $j->status ? 'checked' : '' }}>
-<span class="checkmark"></span>
-</label>
-</td>
+                    <td>
+                        <input type="text" name="tempat[]" value="{{ $j->tempat }}">
+                    </td>
 
-<td>
-<form method="POST" action="/hapus-jadwal/{{ $j->id }}" style="display:inline;">
-@csrf
-<button class="hapus-btn">Hapus</button>
-</form>
-</td>
+                    <td>
+                        <label class="status-box">
+                            <input 
+                                type="checkbox" 
+                                name="status[]" 
+                                {{ $j->status ? 'checked' : '' }}
+                            >
+                            <span class="checkmark"></span>
+                        </label>
+                    </td>
 
-</tr>
+                    <td>
+                        <a 
+                            href="{{ url('/hapus-jadwal/'.$j->id) }}" 
+                            class="hapus-btn"
+                        >
+                            Hapus
+                        </a>
+                    </td>
+                </tr>
+                @endforeach
 
-@endforeach
+                <tr>
+                    <td>+</td>
 
-<tr>
+                    <td>
+                        <input type="text" name="jam[]" placeholder="07:00">
+                    </td>
 
-<td class="no">+</td>
+                    <td>
+                        <input type="text" name="tugas[]" placeholder="Isi tugas">
+                    </td>
 
-<td><input type="text" name="jam[]" placeholder="07:00"></td>
-<td><input type="text" name="tugas[]" placeholder="Isi tugas"></td>
-<td><input type="text" name="tempat[]" placeholder="Lokasi"></td>
+                    <td>
+                        <input type="text" name="tempat[]" placeholder="Lokasi">
+                    </td>
 
-<td>
-<label class="status-box">
-<input type="checkbox" name="status[]">
-<span class="checkmark"></span>
-</label>
-</td>
+                    <td>
+                        <label class="status-box">
+                            <input type="checkbox" name="status[]">
+                            <span class="checkmark"></span>
+                        </label>
+                    </td>
 
-<td>
-<button type="button" class="hapus-btn" onclick="hapusRow(this)">Hapus</button>
-</td>
+                    <td></td>
+                </tr>
 
-</tr>
+            </table>
 
-</table>
+        </div>
 
-</div>
+        <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:15px;">
+            <a href="/" class="btn">Home</a>
+            <button class="btn" type="submit">SIMPAN JADWAL</button>
+        </div>
 
-<div style="display:flex; justify-content:flex-end; gap:10px; margin-top:15px;">
-<a href="/" class="btn">Home</a>
-<button class="btn" type="submit">
-SIMPAN JADWAL
-</button>
-</div>
-
-</form>
+    </form>
 
 </div>
 
 <script>
+    document.getElementById("fotoInput").addEventListener("change", function () {
+        document.getElementById("formFoto").submit();
+    });
 
-function tambahRow(){
-var table=document.getElementById("jadwalTable");
-var rowCount=table.rows.length;
+    function tambahRow() {
+        let table = document.getElementById("jadwalTable");
 
-var row=table.insertRow(rowCount);
+        let row = table.insertRow(table.rows.length);
 
-row.innerHTML=`
-<td class="no">${rowCount}</td>
-<td><input type="text" name="jam[]" placeholder="07:00"></td>
-<td><input type="text" name="tugas[]" placeholder="Isi tugas"></td>
-<td><input type="text" name="tempat[]" placeholder="Lokasi"></td>
-
-<td>
-<label class="status-box">
-<input type="checkbox" name="status[]">
-<span class="checkmark"></span>
-</label>
-</td>
-
-<td>
-<button type="button" class="hapus-btn" onclick="hapusRow(this)">Hapus</button>
-</td>
-`;
-}
-
-function hapusRow(btn){
-var row=btn.parentNode.parentNode;
-row.remove();
-updateNomor();
-}
-
-function updateNomor(){
-var table=document.getElementById("jadwalTable");
-for(var i=1;i<table.rows.length;i++){
-table.rows[i].cells[0].innerText=i;
-}
-}
-
+        row.innerHTML = `
+            <td>+</td>
+            <td><input type="text" name="jam[]" placeholder="07:00"></td>
+            <td><input type="text" name="tugas[]" placeholder="Isi tugas"></td>
+            <td><input type="text" name="tempat[]" placeholder="Lokasi"></td>
+            <td>
+                <label class="status-box">
+                    <input type="checkbox" name="status[]">
+                    <span class="checkmark"></span>
+                </label>
+            </td>
+            <td></td>
+        `;
+    }
 </script>
+
 </body>
 </html>
