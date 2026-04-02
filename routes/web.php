@@ -14,7 +14,9 @@ $orang = [
     'Junaidi',
     'Putri',
     'Yudi',
-    'Arul'
+    'Arul',
+    'Helga',
+    'Dita'
 ];
 
 /* ===========================
@@ -66,7 +68,6 @@ Route::post('/simpan-jadwal', function (Request $request) {
             $tugas = $request->tugas[$i] ?? null;
             $tempat = $request->tempat[$i] ?? null;
 
-            // skip kalau kosong
             if (!$jam || !$tugas || !$tempat) {
                 continue;
             }
@@ -99,37 +100,41 @@ Route::get('/hapus-jadwal/{id}', function ($id) {
 });
 
 /* ===========================
-   UPLOAD FOTO PROFIL
+   UPLOAD FOTO PROFIL (FIX)
 =========================== */
 
 Route::post('/upload-foto', function (Request $request) {
 
     if ($request->hasFile('foto')) {
 
-        $file = $request->file('foto');
-        $namaFile = time() . '.' . $file->getClientOriginalExtension();
+        $nama = strtolower($request->nama);
 
-        // simpan ke public/foto
-        $file->move(public_path('foto'), $namaFile);
+        // paksa jadi .jpg (biar konsisten)
+        $filename = $nama . '.jpg';
 
-        // kirim nama file ke session
-        return back()->with('foto', $namaFile);
+        // simpan langsung
+        $request->file('foto')->move(
+            public_path('foto'),
+            $filename
+        );
     }
 
     return back();
 });
 
 /* ===========================
-   HAPUS FOTO PROFIL
+   HAPUS FOTO PROFIL (FIX)
 =========================== */
 
-Route::get('/hapus-foto/{nama}', function ($nama) {
+Route::post('/hapus-foto', function (Request $request) {
 
-    $path = public_path('foto/' . $nama);
+    $nama = strtolower($request->nama);
 
-    if (file_exists($path)) {
-        unlink($path);
-    }
+    $pathJpg = public_path('foto/' . $nama . '.jpg');
+    $pathPng = public_path('foto/' . $nama . '.png');
+
+    if (file_exists($pathJpg)) unlink($pathJpg);
+    if (file_exists($pathPng)) unlink($pathPng);
 
     return back();
 });

@@ -77,6 +77,7 @@ overflow:hidden;
 border:5px solid white;
 box-shadow:0 10px 22px rgba(0,0,0,0.25);
 cursor:pointer;
+position:relative;
 }
 
 .avatar img{
@@ -166,11 +167,8 @@ DASHBOARD HUMAS
 
 <div class="avatar" onclick="toggleMenu('{{ strtolower($o) }}')">
 
-@if(file_exists(public_path('foto/'.strtolower($o).'.jpg')))
-<img src="/foto/{{ strtolower($o) }}.jpg">
-@else
-{{ strtoupper(substr($o,0,1)) }}
-@endif
+<img src="/foto/{{ strtolower($o) }}.jpg?{{ time() }}"
+onerror="this.style.display='none'; this.parentElement.innerHTML='{{ strtoupper(substr($o,0,1)) }}'">
 
 </div>
 
@@ -235,4 +233,3 @@ menu.style.display="flex";
 
 </body>
 </html>
-
